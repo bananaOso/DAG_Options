@@ -1,0 +1,43 @@
+{% if config.devMode == true %}
+
+        {# To mimic truncate behavior #}
+        {% if config.truncateBefore == true %}
+            {% set truncateBehavior = 'INSERT OVERWRITE' %}
+        {% else %}
+            {% set truncateBehavior = 'INSERT' %}
+        {% endif -%}
+
+    {{ stage('Insert Data') }}
+
+                {{ truncateBehavior }} INTO {{ ref_no_link(node.location.name, node.name) }}
+                    (
+                        {% for col in columns %}
+                            "{{ col.name }}"
+                            {%- if not loop.last -%},{% endif %}
+                        {% endfor %}
+                    )
+        
+            {% for source in sources %}
+                /* Combine Sources if needed */
+                {% if loop.first %}
+                    SELECT {% if config.selectDistinct %} DISTINCT {% endif %}
+                    {% for col in columns  %}
+                        "{{ col.name }}" AS "{{ col.name }}"
+                        {% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                    FROM (
+                {% endif %}
+                SELECT {% if config.selectDistinct %} DISTINCT {% endif %}
+                {% for col in source.columns if not col.isSurrogateKey %}
+                    {{ get_source_transform(col) }} AS "{{ col.name }}"{% if not loop.last %}, {% endif %}
+                {% endfor %}
+                {{ source.join }}
+                {% if not loop.last %}
+                    {{ config.insertStrategy }}
+                {% endif %}
+                {% if loop.last %}
+                    )
+                {% endif %}
+            {% endfor %}
+            {% if config.groupByAll %}GROUP BY ALL{% endif %}
+{% endif -%}

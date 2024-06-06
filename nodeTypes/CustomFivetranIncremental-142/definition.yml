@@ -1,0 +1,93 @@
+fileVersion: 1
+id: "142"
+isDisabled: false
+metadata:
+  defaultStorageLocation: null
+  error: null
+  nodeMetadataSpec: |+
+    capitalized: CUSTOM INCREMENTAL
+    short: INC
+    plural: Incremental
+    tagColor: green
+
+    config:
+    - groupName: Options
+      items:
+      - type: materializationSelector
+        default: view
+        options:
+        - view
+        isRequired: true
+        enableIf: "false"
+
+      - displayName: Filter data based on Persistent Table
+        attributeName: refTable
+        type: toggleButton
+        default: false
+        isRequired: false
+
+      - displayName: Persistent Table based on prefix
+        attributeName: persistTable
+        type: dropdownSelector
+        default: "PSTG"
+        options:
+        - ""
+        - "PSTG"
+        - "DIM"
+        - "FACT"
+        isRequired: false
+        enableIf: "{{config.refTable}}"
+
+      - displayName: "Incremental Load Column (date)"
+        attributeName: incColumn
+        type: textBox
+        default: "_FIVETRAN_SYNCED"
+        
+        isRequired: false
+        enableIf: "{{config.refTable}}"
+
+      - displayName: Persistent Table location
+        attributeName: persistTableLocation
+        type: dropdownSelector
+        default: "ODS"
+        options:
+        - "DATA_VAULT"
+        - "MART"
+        - "ODS"
+        - "WORK"
+        isRequired: false
+        enableIf: "{{config.refTable}}"
+
+      - displayName: Persistent Table name if not selected above
+        attributeName: persistTableName
+        type: textBox
+        default: ""
+        isRequired: false
+        enableIf: "{{config.refTable}}"
+
+    joinTemplate: |
+
+      {%- set src = namespace() -%}
+      {%- for dep in sources[0].dependencies -%}
+        FROM
+        {{- ref_raw(dep.node.location.name, dep.node.name) }} "{{ dep.node.name }}"
+        {%- set src.name = dep.node.name -%}
+      {%endfor%}
+      {%- if config.persistTableName | length > 0 -%}
+          {%- set persist = config.persistTableName -%}
+      {%- else -%}
+          {%- if  config.persistTable | length > 0 %}
+            {%- set persist = node.name | replace("INC", config.persistTable) -%}
+          {%- else -%}
+            {%- set persist = node.name | replace("INC_", config.persistTable) -%}
+          {%- endif -%}
+      {%- endif -%}
+      {%- if config.refTable and persist | length > 0 %}
+        WHERE "{{src.name}}"."{{config.incColumn}}" > 
+        (SELECT COALESCE(MAX("{{config.incColumn}}"), '1900-01-01') 
+                  FROM {{ref_no_link_raw(config.persistTableLocation, persist)}} )
+
+      {%endif%}
+
+name: Custom Fivetran Incremental
+type: NodeType

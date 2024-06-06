@@ -1,0 +1,99 @@
+fileVersion: 1
+id: "30"
+isDisabled: true
+metadata:
+  defaultStorageLocation: WORK
+  error: null
+  nodeMetadataSpec: |
+    capitalized: Custom Schema Detect
+    short: SCH_DETECT
+    plural: Stages
+    tagColor: 'pink'
+
+    config:
+    - groupName: General Options
+      items:
+      
+      - displayName: Truncate Before
+        attributeName: truncateBefore
+        type: toggleButton
+        default: false
+
+    - groupName: Stage
+      items:
+
+      - displayName: Stage Name Override
+        attributeName: stageName
+        type: textBox
+        default: "MY_PARQUET_STAGE"
+
+      - displayName: Stage Location (Schema) Override
+        attributeName: stageLocation
+        type: textBox
+
+    - groupName: File Format
+      items:
+
+      - displayName: Create File Format
+        attributeName: fileFormat
+        type: toggleButton
+        default: false
+
+      - displayName: File Format Location (Schema) Override
+        attributeName: fileFormatLoc
+        type: textBox
+        enableIf: "{% if config.fileFormat %} true {% else %} false {% endif %}" 
+
+      - displayName: File Format Name
+        attributeName: fileFormatName
+        type: textBox
+        default: "PARQUET_FILE_FORMAT"
+        isRequired: true
+        enableIf: "{% if config.fileFormat %} true {% else %} false {% endif %}"  
+
+      - displayName: File Format Type
+        attributeName: fileFormatType
+        type: dropdownSelector
+        default: PARQUET
+        options:
+        - "PARQUET"
+        isRequired: false
+        enableIf: "{% if config.fileFormat %} true {% else %} false {% endif %}" 
+
+    - groupName: Source
+      items:
+      - displayName: File Location
+        attributeName: fileLocation
+        type: dropdownSelector
+        default: INTERNAL
+        options:
+        - "INTERNAL"
+        - "EXTERNAL - S3"
+        - "EXTERNAL - Azure"
+        isRequired: true
+        
+      - displayName: S3 File or Folder URL
+        attributeName: S3URL
+        type: textBox
+        syntax: sql
+        isRequired: false
+        enableIf: "{% if config.fileLocation == 'EXTERNAL - S3' %} true {% else %} false {% endif %}"
+
+      - displayName: S3 ID
+        attributeName: S3ID
+        type: textBox
+        syntax: text
+        isRequired: false
+        enableIf: "{% if config.fileLocation == 'EXTERNAL - S3' %} true {% else %} false {% endif %}"
+
+      - displayName: S3 Secret Key
+        attributeName: S3SecretKey
+        type: textBox
+        syntax: text
+        isRequired: false
+        enableIf: "{% if config.fileLocation == 'EXTERNAL - S3' %} true {% else %} false {% endif %}"
+
+
+       
+name: Custom Schema Detect
+type: NodeType

@@ -1,0 +1,57 @@
+{% set cfg = namespace() %}
+
+{% set db = ref_no_link(node.location.name, node.name).split('.')[1] | replace('"',"") %} 
+
+{{ stage('Create Stage Table') }}
+
+CREATE OR REPLACE TABLE {{ ref_no_link(node.location.name, node.name) }}
+(
+    {% for col in columns %}
+        "{{ col.name }}" {{ col.dataType }}
+        {%- if not col.nullable %} NOT NULL
+            {%- if col.defaultValue | length > 0 %} DEFAULT {{ col.defaultValue }}{% endif %}
+        {% endif %}
+        {%- if col.description | length > 0 %} COMMENT '{{ col.description }}'{% endif %}
+        {%- if not loop.last -%}, {% endif %}
+    {% endfor %}
+)
+{%- if node.description | length > 0 %} COMMENT = '{{ node.description }}'{% endif %}
+
+
+
+{{ stage('Create Procedure ') }}
+
+CREATE OR REPLACE PROCEDURE {{ ref_no_link(node.location.name, node.name) }}()
+RETURNS TABLE(a integer)
+LANGUAGE SQL
+AS
+$$
+  declare
+    res resultset;
+    query varchar default
+
+		{% for source in sources -%}
+	
+				'INSERT INTO {{ ref_no_link(node.location.name, node.name) }}
+				(
+					{% for col in source.columns -%}
+						"{{ col.name }}"
+						{%- if not loop.last -%},{% endif %}
+					{% endfor -%}
+				)
+
+			SELECT
+			    {% for col in source.columns -%}
+                    {{ get_source_transform(col) }} AS "{{ col.name }}"
+				    {%- if not loop.last -%}, {% endif %}
+			    {% endfor %}	
+			{{ source.join }}'
+		
+		{%- endfor %}
+;
+begin
+    res := (execute immediate :query);
+    return table (res);
+  end; 
+$$
+; 

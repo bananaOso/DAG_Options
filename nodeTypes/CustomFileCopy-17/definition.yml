@@ -1,0 +1,103 @@
+fileVersion: 1
+id: "17"
+isDisabled: true
+metadata:
+  defaultStorageLocation: WORK
+  error: null
+  nodeMetadataSpec: |-
+    capitalized: FILE COPY
+    short: 'COPY'
+    tagColor: 'brown'
+    isDisabled: false
+    plural: File Copies
+
+    config:
+
+    - groupName: File Location
+      items: 
+
+      - displayName: Stage
+        attributeName: fileLocation
+        type: dropdownSelector
+        default: TPCH
+        options:
+        - "TPCH"
+        - "UserData"
+        - "RefData"
+        isRequired: true
+
+      - displayName: File Pattern
+        attributeName: filePattern
+        type: textBox
+        default: ".*[.]json"
+        isRequired: true
+
+    - groupName: File Format 
+      items:
+      - displayName: File Type
+        attributeName: fileType
+        type: dropdownSelector
+        default: JSON
+        options:
+        - "CSV"
+        - "JSON"
+        - "Parquet"
+        isRequired: true
+
+      - displayName: Compression
+        attributeName: compression
+        enableIf: "{% if config.fileType in ['CSV','JSON'] %} true {% else %} false {% endif %}" 
+        type: dropdownSelector
+        options:
+        - "AUTO"
+        - "GZIP"
+        - "BZ2"
+        - "BROTLI"
+        - "ZSTD"
+        - "DEFLATE"
+        - "RAW_DEFLATE"
+        - "NONE"
+        isRequired: false
+
+      - displayName: Record Delimiter
+        attributeName: recDelim
+        type: textBox
+        enableIf: "{% if config.fileType == 'CSV' %} true {% else %} false {% endif %}" 
+        isRequired: false
+
+      - displayName: Field Delimiter
+        attributeName: fieldDelim
+        type: textBox
+        enableIf: "{% if config.fileType == 'CSV' %} true {% else %} false {% endif %}" 
+        isRequired: false
+
+      - displayName: Number of header lines to skip
+        attributeName: skipHeader
+        type: textBox
+        enableIf: "{% if config.fileType == 'CSV' %} true {% else %} false {% endif %}" 
+        isRequired: false
+
+      - displayName: Skip Blank Lines
+        attributeName: skipBlankLines
+        enableIf: "{% if config.fileType == 'CSV' %} true {% else %} false {% endif %}" 
+        type: toggleButton
+        default: false
+        isRequired: false
+
+    - groupName: Additional Options
+      items:
+      - displayName: Auto Refresh
+        attributeName: autoRefresh
+        type: toggleButton
+        default: false
+        isRequired: false
+
+    systemColumns:
+
+    - displayName: 'VALUE'
+      attributeName: 'VALUE'
+      transform: ''
+      dataType: VARIANT
+      placement: beginning
+name: Custom File Copy
+type: NodeType

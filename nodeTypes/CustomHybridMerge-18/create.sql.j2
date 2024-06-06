@@ -1,0 +1,261 @@
+{% set cfg = namespace() %}
+
+{% if currentState != undefined and desiredState == undefined %}
+
+    {% set cfg.streamName = currentState.node.name + '_TABLE_CHANGES' %}
+    {% set cfg.odsName = currentState.node.name + '_ODS' %}
+    {% set cfg.taskName = 'POPULATE_' + cfg.odsName %}
+    {% set cfg.viewName = currentState.node.name %}
+    {% set cfg.src = ref(currentState.sources[0].dependencies[0].node.location.name, currentState.sources[0].dependencies[0].node.name) %}
+    {% set cfg.tgtLoc = currentState.node.location.name %}
+
+    {{ stage('Drop Stream') }}
+    DROP STREAM IF EXISTS {{ ref_no_link(cfg.tgtLoc, cfg.streamName) }}
+
+    {{ stage('Drop ODS Target Table') }}
+    DROP TABLE IF EXISTS {{ ref_no_link(cfg.tgtLoc, cfg.odsName) }}
+    
+    {% if currentState.config.taskEnabled is true %}
+        {{ stage('Drop Task') }}
+        DROP TASK {{ cfg.taskName }}
+    {% endif %}
+
+{% else %}
+
+    {% set cfg.tgtLoc = desiredState.node.location.name %}
+    {% set cfg.odsName = desiredState.node.name ~ '_ODS' %}
+    {% set cfg.taskName = 'POPULATE_' ~ cfg.odsName %}
+    {% set cfg.viewName = desiredState.node.name %}
+    {% set cfg.src = ref(desiredState.sources[0].dependencies[0].node.location.name, desiredState.sources[0].dependencies[0].node.name) %}
+    {% set cfg.streamName = desiredState.node.name ~ '_TABLE_CHANGES' %}
+    {% set cfg.dmlCol = (desiredState.columns | selectattr("cdcDMLIdent", "eq", true) | list | first).name %}
+    {% set cfg.tsCol = (desiredState.columns | selectattr("cdcTimestamp", "eq", true) | list | first).name %}
+
+    {{ stage('Create Stream') }}
+
+    CREATE OR REPLACE STREAM {{ ref_no_link(cfg.tgtLoc, cfg.streamName) }}
+    ON TABLE {{ cfg.src }}
+    SHOW_INITIAL_ROWS = {{ desiredState.config.initialLoad | upper }}
+    APPEND_ONLY = {{ desiredState.config.appendOnly | upper }}
+    COMMENT = 'Capture changes on {{ cfg.src }}'
+
+    {{ stage('Create ODS Target Table') }}
+
+    CREATE OR REPLACE TABLE {{ ref_no_link(cfg.tgtLoc, cfg.odsName) }}
+    (
+        {% for col in desiredState.columns %}
+            "{{ col.name }}" {{ col.dataType }}
+            {%- if not col.nullable %} NOT NULL
+                {%- if col.defaultValue | length > 0 %} DEFAULT {{ col.defaultValue }}{% endif %}
+            {% endif %}
+            {%- if col.description | length > 0 %} COMMENT '{{ col.description }}'{% endif %}
+            {%- if not loop.last -%}, {% endif %}
+        {% endfor %}
+    )
+    {% if desiredState.node.description | length > 0 %} COMMENT = '{{ desiredState.node.description }}'{% endif %}
+
+    {% if desiredState.config.initialLoad %}
+
+        {% for source in desiredState.sources %}
+
+            {{ stage('Performing Initial Load') }}
+
+            INSERT INTO {{ ref_no_link(cfg.tgtLoc, cfg.odsName) }}
+            SELECT  {% for col in source.columns %}
+                        "{{ col.name }}"
+                        {%- if not loop.last -%},{% endif %}
+                    {% endfor %}
+            FROM (
+                SELECT  {% for col in source.columns %}
+                            "{{ col.name }}",
+                        {% endfor %}
+                        "LOAD_FLAG"
+                FROM (
+                    SELECT	{% for col in source.columns %}
+                                {{ get_source_transform(col) }} AS "{{ col.name }}",
+                            {% endfor %}
+                            {% if desiredState.config.softDelete %}
+                                1
+                            {% else %}
+                                CASE WHEN "{{ cfg.dmlCol }}" = 'D' THEN 0 ELSE 1 END
+                            {% endif %} AS "LOAD_FLAG"
+                    {{ source.join }}
+                )
+                QUALIFY 1 = ROW_NUMBER() OVER ( PARTITION BY   {% for col in source.columns if col.isBusinessKey %}
+                                                                "{{ col.name }}"
+                                                                {%- if not loop.last -%},{% endif %}
+                                                            {% endfor %}
+                                                ORDER BY "{{ cfg.tsCol }}" DESC)
+            )
+            WHERE "LOAD_FLAG" = 1
+
+            {% if desiredState.config.insertStrategy in ['UNION', 'UNION ALL'] and not loop.last %}
+                {{desiredState.config.insertStrategy}}
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
+    {{ stage('Create Hybrid View') }}
+
+    CREATE OR REPLACE VIEW {{ ref_no_link(cfg.tgtLoc, cfg.viewName) }} AS
+    WITH DELTA AS (
+        {% for source in desiredState.sources %}
+            SELECT
+            {% for col in source.columns %}
+                {{ get_source_transform(col) }} AS "{{ col.name }}"
+                {%- if not loop.last -%}, {% endif %}
+            {% endfor %}
+
+            FROM {{ cfg.src }}
+
+            changes(information => append_only)
+            at(stream => '{{ ref_no_link(cfg.tgtLoc, cfg.streamName) }}')
+
+            QUALIFY 1 = ROW_NUMBER() OVER ( PARTITION BY   {% for col in source.columns if col.isBusinessKey %}
+                                                            "{{ col.name }}"
+                                                            {%- if not loop.last -%},{% endif %}
+                                                        {% endfor %}
+                                            ORDER BY "{{ cfg.tsCol }}" DESC)
+            {% if not loop.last %}
+                {% if desiredState.config.insertStrategy in ['UNION', 'UNION ALL'] %}
+                    {{ desiredState.config.insertStrategy }}
+                {% else %}
+                    UNION
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    )
+    SELECT  {% for col in desiredState.columns %}
+                "{{ col.name }}"
+                {%- if not loop.last -%},{% endif %}
+            {% endfor %}
+    FROM {{ ref_no_link(cfg.tgtLoc, cfg.odsName) }} AS "{{ cfg.odsName }}"
+    WHERE NOT EXISTS (SELECT 1 FROM DELTA WHERE {% for col in desiredState.columns if col.isBusinessKey %}
+                                                    "{{ cfg.odsName }}"."{{ col.name }}" = DELTA."{{ col.name }}"
+                                                    {% if not loop.last %}AND{% endif %}
+                                                {% endfor %}
+    )
+    UNION ALL
+    SELECT  {% for col in desiredState.columns %}
+                "{{ col.name }}"
+                {%- if not loop.last -%},{% endif %}
+            {% endfor %}
+    FROM DELTA
+
+    {% if desiredState.config.taskEnabled is true %}
+
+        {{ stage('Create Task') }}
+
+        CREATE OR REPLACE TASK {{ ref_no_link(cfg.tgtLoc, cfg.taskName) }}
+        WAREHOUSE = {{desiredState.config.taskWarehouse}}
+        SCHEDULE = 
+        {% if desiredState.config.taskSchedule == 'Every minute' %}
+            '1 MINUTE'
+        {% elif desiredState.config.taskSchedule == 'Every 5 minutes' %}
+            '5 MINUTE'
+        {% elif desiredState.config.taskSchedule == 'Every 30 minutes' %}
+            '30 MINUTE'
+        {% elif desiredState.config.taskSchedule == 'Every hour' %}
+            '60 MINUTE'
+        {% elif desiredState.config.taskSchedule == 'Every day' %}
+            '3600 MINUTE'
+        {% else %}
+            'INVALID'
+        {% endif %}
+        COMMENT='Task to copy data of stream {{ cfg.streamName }} into {{ cfg.odsName }}'
+        WHEN SYSTEM$STREAM_HAS_DATA('{{ ref_no_link(cfg.tgtLoc, cfg.streamName) }}')
+        AS
+        MERGE INTO {{ ref_no_link(cfg.tgtLoc, cfg.odsName) }} "{{ cfg.odsName }}"
+        USING (
+
+            SELECT
+            {% for col in desiredState.sources[0].columns %}
+                {{ get_source_transform(col) }} AS "{{ col.name }}"
+                {%- if not loop.last -%}, {% endif %}
+            {% endfor %}
+
+            FROM {{ ref_no_link(cfg.tgtLoc, cfg.streamName) }} AS "{{ desiredState.sources[0].dependencies[0].node.name }}"
+            QUALIFY 1 = ROW_NUMBER() OVER ( PARTITION BY   {% for col in desiredState.columns if col.isBusinessKey %}
+                                                            "{{ col.name }}"
+                                                            {%- if not loop.last -%},{% endif %}
+                                                        {% endfor %}
+                                            ORDER BY "{{ (desiredState.columns | selectattr("cdcTimestamp", "eq", true) | list | first).name }}" DESC)
+
+        ) DELTA
+        ON  {% for col in desiredState.columns if col.isBusinessKey %}
+                "{{ cfg.odsName }}"."{{ col.name }}" = DELTA."{{ col.name }}"
+                {% if not loop.last %}AND{% endif %}
+            {% endfor %}
+
+
+        WHEN NOT MATCHED AND DELTA."{{ cfg.dmlCol }}" = '{{ desiredState.config.cdcDMLinsert }}'
+        THEN INSERT (
+            {% for col in desiredState.columns %}"{{ cfg.odsName }}"."{{ col.name }}"
+                {%- if not loop.last -%},{% endif %}
+            {% endfor %}
+        ) VALUES (
+            {% for col in desiredState.columns %}DELTA."{{ col.name }}"
+                {%- if not loop.last -%},{% endif %}
+            {% endfor %}
+        )
+
+        WHEN NOT MATCHED AND DELTA."{{ cfg.dmlCol }}" = '{{ desiredState.config.cdcDMLupdate }}'
+        THEN INSERT (
+            {% for col in desiredState.columns %}
+                "{{ cfg.odsName }}"."{{ col.name }}"
+                {%- if not loop.last -%},{% endif %}
+            {% endfor %}
+        ) VALUES (
+            {% for col in desiredState.columns %}
+                DELTA."{{ col.name }}"
+                {%- if not loop.last -%},{% endif %}
+            {% endfor %}
+        )
+
+        WHEN MATCHED AND DELTA."{{ cfg.dmlCol }}" = '{{ desiredState.config.cdcDMLupdate }}'
+        THEN UPDATE SET 
+        {% for col in desiredState.columns %}
+            "{{ cfg.odsName }}"."{{ col.name }}" = DELTA."{{ col.name }}"
+            {%- if not loop.last -%},{% endif %}
+        {% endfor %}
+
+        
+        {% if desiredState.config.softDelete %}
+
+            WHEN NOT MATCHED AND DELTA."{{ cfg.dmlCol }}" = '{{ desiredState.config.cdcDMLdelete }}'
+            THEN INSERT (
+                {% for col in desiredState.columns %}
+                    "{{ cfg.odsName }}"."{{ col.name }}"
+                    {%- if not loop.last -%},{% endif %}
+                {% endfor %}
+            ) VALUES (
+                {% for col in desiredState.columns %}
+                    DELTA."{{ col.name }}"
+                    {%- if not loop.last -%},{% endif %}
+                {% endfor %}
+            )
+
+            WHEN MATCHED AND DELTA."{{ cfg.dmlCol }}" = '{{ desiredState.config.cdcDMLdelete }}'
+            THEN UPDATE SET 
+            {% for col in desiredState.columns if col.cdcDMLIdent or col.cdcTimestamp or col.isSystemCreateDate %}
+                "{{ cfg.odsName }}"."{{ col.name }}" = DELTA."{{ col.name }}"
+                {%- if not loop.last -%},{% endif %}
+            {% endfor %}
+
+        {% else %}
+
+            WHEN MATCHED AND DELTA."{{ cfg.dmlCol }}" = '{{ desiredState.config.cdcDMLdelete }}'
+            THEN DELETE
+
+        {% endif %}
+
+    {% elif currentState != undefined and currentState.config.taskEnabled is true %}
+
+        {{ stage('Drop Task') }}
+        DROP TASK IF EXISTS {{ ref_no_link(cfg.tgtLoc, cfg.taskName) }}
+
+    {% endif %}
+
+{% endif %}

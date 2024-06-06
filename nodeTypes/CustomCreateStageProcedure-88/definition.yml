@@ -1,0 +1,16 @@
+fileVersion: 1
+id: "88"
+isDisabled: false
+metadata:
+  defaultStorageLocation: null
+  error: null
+  nodeMetadataSpec: |-
+    capitalized: Custom Create Stage Procedure
+    short: STG_P
+    plural: Stages
+    tagColor: 'beige'
+
+
+      
+name: Custom Create Stage Procedure
+type: NodeType

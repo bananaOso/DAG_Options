@@ -1,0 +1,117 @@
+fileVersion: 1
+id: "18"
+isDisabled: true
+metadata:
+  defaultStorageLocation: WORK
+  error: null
+  nodeMetadataSpec: |-
+    capitalized: HYBRID MERGE
+    short: "HYM"
+    tagColor: gold
+    plural: Hybrid Merge Nodes
+
+    deployStrategy: advanced
+
+    config:
+
+    - groupName: General
+      items:
+      - displayName: Soft Delete (disabled = Hard Delete)
+        attributeName: softDelete
+        type: toggleButton
+        default: true
+        isRequired: false
+
+      - type: businessKeyColumns
+        isRequired: true
+
+      - displayName: CDC DML Identifier
+        attributeName: cdcDMLIdent
+        type: columnSelector
+        isRequired: true
+
+      - displayName: CDC Timestamp
+        attributeName: cdcTimestamp
+        type: columnSelector
+        isRequired: true
+
+    - groupName: Stream
+      items:
+      - displayName: Initial Load
+        attributeName: initialLoad
+        type: toggleButton
+        default: true
+      - displayName: Append Only (disable for Delta stream)
+        attributeName: appendOnly
+        type: toggleButton
+        default: true
+
+    - groupName: Task
+      items:
+
+      - displayName: Create Task
+        enableIf: "{{config.cdcTableEnabled}}"
+        attributeName: taskEnabled
+        type: toggleButton
+        default: false
+        isRequired: false
+
+      - displayName: Task Schedule
+        enableIf: "{{config.taskEnabled}}"
+        attributeName: taskSchedule
+        type: dropdownSelector
+        default: "Every 30 minutes"
+        options:
+        - "Every minute"
+        - "Every 5 minutes"
+        - "Every 30 minutes"
+        - "Every hour"
+        - "Every day"
+        isRequired: false
+
+      - displayName: Warehouse
+        enableIf: "{{config.taskEnabled}}"
+        attributeName: taskWarehouse
+        type: dropdownSelector
+        default: "COMPUTE_WH"
+        options:
+        - "COMPUTE_WH"
+        isRequired: false
+
+    - groupName: Advanced
+      items:
+      - displayName: CDC DML Identifier - Insert
+        attributeName: cdcDMLinsert
+        type: textBox
+        required: true
+        default: 'I'
+      - displayName: CDC DML Identifier - Update
+        attributeName: cdcDMLupdate
+        type: textBox
+        required: true
+        default: 'U'
+      - displayName: CDC DML Identifier - Delete
+        attributeName: cdcDMLdelete
+        type: textBox
+        required: true
+        default: 'D'
+
+
+    - groupName: Hidden config
+      enableIf: "false"
+      items:
+      - displayName: Type
+        type: materializationSelector
+        default: table
+        options:
+        - table
+        isRequired: false
+
+    systemColumns:
+    - displayName: SYSTEM_CREATE_DATE
+      transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      dataType: TIMESTAMP
+      placement: end
+      attributeName: isSystemCreateDate
+name: Custom Hybrid Merge
+type: NodeType

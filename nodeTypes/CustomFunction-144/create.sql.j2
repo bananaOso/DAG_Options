@@ -1,0 +1,47 @@
+{% if desiredState == currentState %}
+
+{{ stage('Nothing to do.') }}
+select 1
+
+{% elif desiredState %}
+    {% set udtfName = desiredState.node.name %}
+    {% set udtfStorageLocation = desiredState.node.location.name %}
+    {% set udtfDatabaseName = desiredState.storageLocations | selectattr('name', 'equalto', udtfStorageLocation) | map(attribute='database') | first %}
+
+    {% set udtfSchemaName = desiredState.storageLocations | selectattr('name', 'equalto', udtfStorageLocation) | map(attribute='schema') | first %}
+
+    {% set fqUdtfName = '"' + udtfDatabaseName + '"."' + udtfSchemaName + '"."' + udtfName + '"' %}
+
+    {{ stage('Create ' + fqUdtfName + ' UDTF') }}
+    CREATE OR REPLACE FUNCTION {{ fqUdtfName }} (IpKeyDate DATE )
+    RETURNS TABLE (
+    {% for col in desiredState.columns -%}
+        "{{ col.name }}" {{ col.dataType }}
+        {%- if not loop.last %},{% endif %}
+    {% endfor %}
+    )
+    LANGUAGE SQL
+    AS
+    $$
+    SELECT 
+    {%- for col in desiredState.sources[0].columns %}
+        {{ get_source_transform(col) }} AS "{{ col.name }}"
+        {%- if not loop.last -%}, {%- endif -%}
+    {% endfor %}
+    {{ desiredState.sources[0].join }}
+    $$;
+
+{% elif currentState != undefined and desiredState == undefined %}
+    {% set udtfName = currentState.node.name %}
+    {% set udtfStorageLocation = currentState.node.location.name %}
+    {% set udtfDatabaseName = currentState.storageLocations | selectattr('name', 'equalto', udtfStorageLocation) | map(attribute='database') | first %}
+
+    {% set udtfSchemaName = currentState.storageLocations | selectattr('name', 'equalto', udtfStorageLocation) | map(attribute='schema') | first %}
+
+    {% set fqUdtfName = '"' + udtfDatabaseName + '"."' + udtfSchemaName + '"."' + udtfName + '"' %}
+
+    {{ stage('Drop ' + fqUdtfName + ' UDTF') }}
+    DROP FUNCTION {{ fqUdtfName }} (date )
+
+
+{% endif %}

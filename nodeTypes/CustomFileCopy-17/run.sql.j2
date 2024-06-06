@@ -1,0 +1,13 @@
+{{ stage('Copy from Stage into table') }}
+
+COPY INTO {{ ref_no_link(node.location.name, node.name) }}
+FROM @{{ ref_no_link(node.location.name, config.fileLocation | upper) }}
+  file_format = (type = {{ config.fileType }}
+  {% if config.fileType == "CSV" %}
+    {% if config.recDelim %}record_delimiter = '{{ config.recDelim }}'{% endif %}
+    {% if config.fieldDelim %}field_delimiter = '{{ config.fieldDelim }}'{% endif %}
+    {% if config.skipHeader %}skip_header = {{ config.skipHeader }}{% endif %}
+    {% if config.skipBlankLines %}skip_blank_lines = true{% endif %}
+  {% endif %}
+  )
+  pattern='{{ config.filePattern }}'

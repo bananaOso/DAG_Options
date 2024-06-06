@@ -1,0 +1,115 @@
+fileVersion: 1
+id: "144"
+isDisabled: false
+metadata:
+  defaultStorageLocation: null
+  error: null
+  nodeMetadataSpec: |
+    capitalized: FN_TIMEBUCKET
+    nodeName: FN_TIMEBUCKET
+    short: FN_TIMEBUCKET
+    plural: none
+    tagColor: 'brown'
+
+    deployStrategy: advanced
+
+    joinTemplate: |
+      {%- set aliasName1 = sources[0].dependencies[0].node.name + '1' -%}
+      {%- set aliasName2 = sources[0].dependencies[0].node.name -%}
+      FROM {{ ref_raw(sources[0].dependencies[0].node.location.name, sources[0].dependencies[0].node.name) }} "{{aliasName1}}",
+           {{ ref_raw(sources[0].dependencies[0].node.location.name, sources[0].dependencies[0].node.name) }} "{{aliasName2}}"
+      WHERE "{{aliasName1}}"."DATE_AT" = IpKeyDate
+      AND ("{{aliasName2}}"."YEAR" >= YEAR(IpKeyDate) -1 AND "{{aliasName2}}"."YEAR" <= YEAR(IpKeyDate))
+      
+    config:
+      - groupName: Hidden Config
+        enableIf: "false"
+        items:
+        - displayName: Type
+          type: materializationSelector
+          default: UDTF
+          options:
+          - UDTF
+          isRequired: false
+          
+    systemColumns:
+
+    - displayName: IpKeyDate
+      transform: 'IpKeyDate'
+      dataType: DATE
+      placement: beginning
+      attributeName: ipKeyDate
+
+    - displayName: TransactionDate
+      transform: '"SALES_CALENDAR"."DATE_AT"'
+      dataType: DATE
+      placement: beginning
+      attributeName: TransactionDate
+
+    - displayName: SameDayLastYearFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" = "SALES_CALENDAR1"."SAMEDAYLASTYEAR" THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: SameDayLastYearFlag
+
+    - displayName: 4WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -27, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= IpKeyDate THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: 4WeeksFlag
+
+    - displayName: 8WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -55, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= IpKeyDate THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: 8WeeksFlag
+
+    - displayName: 13WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -90, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= IpKeyDate THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: 13WeeksFlag
+
+    - displayName: 5To8WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -55, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= DateADD(DAY, -28, IpKeyDate) THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: 5To8WeeksFlag
+
+    - displayName: 9To13WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -90, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= DateADD(DAY, -56, IpKeyDate) THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: 9To13WeeksFlag
+
+    - displayName: LastYear4WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -391, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= DateADD(DAY, -364, IpKeyDate) THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: LastYear4WeeksFlag
+
+    - displayName: LastYear8WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -419, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= DateADD(DAY, -364, IpKeyDate) THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: LastYear8WeeksFlag
+
+    - displayName: LastYear13WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -454, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= DateADD(DAY, -364, IpKeyDate) THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: LastYear13WeeksFlag
+
+    - displayName: LastYear5To8WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -419, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= DateADD(DAY, -392, IpKeyDate) THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: LastYear5To8WeeksFlag
+
+    - displayName: LastYear9To13WeeksFlag
+      transform: 'CASE WHEN "SALES_CALENDAR"."DATE_AT" >= DateADD(DAY, -454, IpKeyDate) AND "SALES_CALENDAR"."DATE_AT" <= DateADD(DAY, -420, IpKeyDate) THEN ''Y'' ELSE '''' END'
+      dataType: VARCHAR(1)
+      placement: beginning
+      attributeName: LastYear9To13WeeksFlag
+name: Custom Function
+type: NodeType

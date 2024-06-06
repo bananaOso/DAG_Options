@@ -1,0 +1,3 @@
+{{ stage('Run Stored Procedure') }}
+	
+call {{ ref_no_link(node.location.name, node.name) }}()

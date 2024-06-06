@@ -1,0 +1,63 @@
+fileVersion: 1
+id: "51"
+isDisabled: false
+metadata:
+  defaultStorageLocation: WORK
+  error: null
+  nodeMetadataSpec: |-
+    capitalized: Custom Python Excel File
+    short: XLSX
+    plural: Excel Files
+    tagColor: 'green'
+    config:
+    - groupName: Options
+      items:
+
+      - displayName: Stage
+        attributeName: stage
+        type: dropdownSelector
+        default: MY_XLS_STAGE
+        options:
+        - "MY_XLS_STAGE"
+        isRequired: true
+
+      - displayName: Stage Location (empty will take node location)
+        attributeName: stageLoc
+        type: textBox
+        default: Utils
+        isRequired: false  
+
+      - displayName: Filename
+        attributeName: filename
+        type: dropdownSelector
+        options:
+        - "myfile.xlsx"
+        - "CUST_ACCT.xlsx"
+        default: CUST_ACCT.xlsx
+        isRequired: true
+
+      - displayName: Worksheet (empty will take the first sheet)
+        attributeName: worksheet
+        type: textBox
+        isRequired: false
+
+      - displayName: Number of rows to skip
+        attributeName: skipRows
+        type: textBox
+        default: "0"
+        isRequired: false
+      
+      - displayName: Columns to be used (eg. C:D)
+        attributeName: useCols
+        type: textBox
+        default: "A:C"
+        isRequired: false  
+
+    systemColumns:
+    - displayName: 'VALUE'
+      attributeName: 'VALUE'
+      transform: ''
+      dataType: VARIANT
+      placement: beginning
+name: Custom Python Excel File
+type: NodeType

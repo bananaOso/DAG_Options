@@ -1,0 +1,39 @@
+{#--Work out the database name for use in multiple places#}
+{#--NOTE THIS CODE IS NOW BROKEN#}
+{% for store in storageLocations if store.id == node.location.id %}
+        {% set db = store.database %}
+        {% set sch = store.schema %}
+
+
+{#--Create a File Format, if required#}
+
+{% if config.fileFormat %}
+{{ stage('Create File Format') }}
+
+  CREATE OR REPLACE FILE FORMAT "{{db}}".{%if config.fileFormatLoc == '' %} "{{sch}}" {%else%} "{{config.fileFormatLoc}}" {%endif%}."{{config.fileFormatName}}" TYPE = {{config.fileFormatType}}
+
+{% endif %}
+
+{#--Create a STAGE based on the location of the file(s) (EXTERNAL) or where you intend to PUT the file (INTERNAL)#}
+
+{{ stage('Create Stage') }} 
+CREATE OR REPLACE STAGE {% if config.stageName == '' and config.stageLocation == '' %} {{ ref_no_link(node.location.name, node.name) }} {% else%} "{{db}}"."{{config.stageLocation}}"."{{config.stageName}}" {%endif%}
+  {% if config.fileLocation == 'EXTERNAL - S3'%} url='{{config.S3URL}}' {% else %} file_format = "{{db}}".{%if config.fileFormatLoc == '' %} "{{sch}}" {%else%} "{{config.fileFormatLoc}}" {%endif%}."{{config.fileFormatName}}" {% endif%}
+  {% if config.fileLocation == 'EXTERNAL - S3'%} credentials=(aws_key_id='{{config.S3ID}}' aws_secret_key='{{config.S3SecretKey}}') {% else %} {% endif%};
+
+{#--Create a TABLE based on the STAGE#}
+
+{{ stage('Create Table') }}
+CREATE OR REPLACE TABLE  {{ ref_no_link(node.location.name, node.name) }}
+using template (
+select array_agg(object_construct(*))
+    from table(
+    infer_schema(
+        location=>'@{%- if config.stageName == '' %}{{ ref_no_link(node.location.name, node.name)}}' {%-else-%} "{{db}}"."{{config.stageLocation}}"."{{config.stageName}}"' {%endif%},
+        file_format=> '"{{db}}".{%if config.fileFormatLoc == '' %}"{{sch}}"{%else%}"{{config.fileFormatLoc}}"{%endif%}."{{config.fileFormatName}}"'
+)
+        ));
+
+{%endfor%}
+
+

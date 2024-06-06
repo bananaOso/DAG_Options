@@ -1,0 +1,29 @@
+{#--Work out the database name for use in multiple places#}
+{#--NOTE THIS CODE IS NOW BROKEN#}
+{% for store in storageLocations if store.id == node.location.id %}
+        {% set db = store.database %}
+        {% set sch = store.schema %}
+        
+{#--Truncate the table beforehand DEFAULT is OFF#}	
+		{% if config.truncateBefore %}
+	
+			{{ stage('Truncate Stage Table') }}
+			TRUNCATE IF EXISTS {{ ref_no_link(node.location.name, node.name) }}
+	
+		{% endif %}
+
+
+   {{ stage('Copy Into') }}
+
+{#--Copy data from stage into table#}
+
+  COPY INTO {{ ref_no_link(node.location.name, node.name) }}
+  from @{%- if config.stageName == '' -%}{{ref_no_link(node.location.name, node.name)}} {%-else-%} "{{db}}"."{{config.stageLocation}}"."{{config.stageName}}" {%-endif%} file_format = '"{{db}}".{%-if config.fileFormatLoc == '' -%}"{{sch}}"{%-else-%}"{{config.fileFormatLoc}}"{%-endif-%}."{{config.fileFormatName}}"'
+  on_error = 'ABORT_STATEMENT'
+  match_by_column_name = case_insensitive
+  purge = FALSE;
+
+{%endfor%}
+
+
+
