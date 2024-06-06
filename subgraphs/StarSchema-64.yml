@@ -1,0 +1,9 @@
+fileVersion: 1
+id: "64"
+name: Star Schema
+steps:
+  - 05858298-3797-48bf-8a60-c5d10c387776
+  - 57076f5f-b77f-4e59-a1bb-11de64b635c7
+  - eb61510c-f76b-49cb-a857-d57ccaf9c9ac
+  - f0688f7f-24cf-451d-a751-066dafcf4198
+type: Subgraph

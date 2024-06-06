@@ -1,0 +1,16 @@
+fileVersion: 1
+id: "32"
+name: Snowflake Source Tables
+steps:
+  - "121"
+  - "122"
+  - "123"
+  - "126"
+  - "127"
+  - 3109b6b6-fe47-42f1-890d-d152ff51cea6
+  - 42eadae4-ccb3-495c-ba1e-4340f9728061
+  - 5788ea0d-9f53-4007-8409-3233614abd01
+  - c4c6b72b-2f86-4a66-8598-42be5e55a0a7
+  - ca522216-305d-44a5-a37d-cd7538bddc7e
+  - f480ea23-b807-43f0-b67f-a2df834b13a1
+type: Subgraph
