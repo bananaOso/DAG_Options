@@ -1,0 +1,23 @@
+fileVersion: 1
+id: "17"
+mappingDefinitions:
+  CUSTOM_SOURCE:
+    database: GLEN_DEMO_UAT
+    schema: SOURCE
+  DATA_VAULT:
+    database: GLEN_DEMO_UAT
+    schema: DATA_VAULT
+  MART:
+    database: GLEN_DEMO_UAT
+    schema: MART
+  ODS:
+    database: GLEN_DEMO_UAT
+    schema: ODS
+  SOURCE_TPCH_SF1:
+    database: SNOWFLAKE_SAMPLE_DATA
+    schema: TPCH_SF1
+  WORK:
+    database: GLEN_DEMO_UAT
+    schema: WORK
+name: UAT
+type: Environment

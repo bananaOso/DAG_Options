@@ -1,0 +1,210 @@
+fileVersion: 1
+id: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+name: PSTG_NATION
+operation:
+  config:
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+  database: ""
+  deployEnabled: true
+  description: Nation data as defined by TPC-H
+  isMultisource: false
+  locationName: ODS
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: aac199f6-4e20-49ae-a82a-be4f6915b761
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: NUMBER
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isSurrogateKey: true
+        name: PSTG_NATION_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 6a525109-e665-4b98-9e7a-3d7518a4cc36
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: NUMBER(38,0)
+        description: BK Nation Key
+        hashColumns: []
+        hashDetails: null
+        name: NATION_NATIONKEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 3edce07f-b2bc-42a4-bd86-75ff43bd6c2d
+                stepCounter: 00c17881-6bf9-4de4-a93c-6f302d8da4af
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 04167a66-5e96-4aa5-920f-311c01dd1efc
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: VARCHAR(25)
+        description: NATION Name
+        hashColumns: []
+        hashDetails: null
+        name: NATION_NAME
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 8d652da4-7f91-434d-9afb-24c26e438ae0
+                stepCounter: 00c17881-6bf9-4de4-a93c-6f302d8da4af
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 2c97dda5-1585-41e5-9be2-99247558da72
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: NUMBER(38,0)
+        description: FK Region Key
+        hashColumns: []
+        hashDetails: null
+        name: NATION_REGIONKEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: dc7a2962-a1e4-4bfc-9051-899bcfa1c2ae
+                stepCounter: 00c17881-6bf9-4de4-a93c-6f302d8da4af
+            transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: c94e3fcc-e8dd-4032-b59f-3a6f5416d599
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: NUMBER
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isSystemVersion: true
+        name: SYSTEM_VERSION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: a27018f3-93d3-49e2-a01f-5983aaba13fb
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: VARCHAR
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isSystemCurrentFlag: true
+        name: SYSTEM_CURRENT_FLAG
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 95cb4055-c761-4d59-96e9-6e8c8f2b30de
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isSystemStartDate: true
+        name: SYSTEM_START_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 0da82425-164c-48e9-9b5a-ad46b978050d
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isSystemEndDate: true
+        name: SYSTEM_END_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST('2999-12-31 00:00:00' AS TIMESTAMP)
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: c07859aa-2e2a-46f9-9e79-22204e0eff84
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isSystemCreateDate: true
+        name: SYSTEM_CREATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: c2b0c74e-072b-477e-9ae6-9d8a7448bf27
+          stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isSystemUpdateDate: true
+        name: SYSTEM_UPDATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+    cteString: ""
+    enabledColumnTestIDs: []
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: WORK
+            nodeName: V_NATION
+        join:
+          joinCondition: FROM {{ ref('WORK', 'V_NATION') }} "V_NATION"
+        name: PSTG_NATION
+        noLinkRefs: []
+  name: PSTG_NATION
+  overrideSQL: false
+  schema: ""
+  sqlType: persistentStage
+  type: sql
+type: Node

@@ -1,0 +1,6 @@
+excludeSelector: ""
+fileVersion: 1
+id: "21"
+includeSelector: "{ location: MART name: FCT_* }"
+name: "# 5 Facts"
+type: Job

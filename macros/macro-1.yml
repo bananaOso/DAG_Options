@@ -1,0 +1,271 @@
+fileVersion: 1
+id: "1"
+macroString: |-
+  {% macro dropObject() %}
+    {{stage('Drop Existing Object')}}
+    {% set loc = storageLocations | selectattr('id', "equalto", node.location.id) | list | first %}
+    execute immediate 
+    $$
+    declare
+      obj_type varchar;
+    begin
+      select INITCAP(DECODE(table_type,'BASE TABLE','TABLE',table_type)) as table_type into :obj_type
+      from "{{ loc.database }}".INFORMATION_SCHEMA.TABLES 
+      where TABLE_CATALOG = '{{ loc.database }}' and TABLE_SCHEMA = '{{ loc.schema }}' and UPPER(TABLE_NAME) = UPPER('{{ node.name }}');
+      if (obj_type is not null)
+      then
+        let res RESULTSET;
+        let qry varchar default 'drop ' || obj_type || ' "{{ loc.database }}"."{{ loc.schema }}"."{{ node.name }}"';
+        res := (execute immediate :qry);
+        return table(res);
+      else
+        return '{{ node.name }} not found, nothing to drop';  
+      end if;
+    end;
+    $$;
+  {% endmacro %}
+
+  {%- macro hash(column=[], algo='MD5', delimiter='||', length=32) -%}
+      {%  for col in column %}
+          {%- if loop.first %}CAST( {{ algo }}({% endif -%}
+              NVL(CAST({{-col-}} AS VARCHAR), 'null')
+          {%- if not loop.last %} || {% if delimiter != '' %} '{{ delimiter }}' || {% endif -%} {% endif -%}
+          {%- if loop.last %}) AS CHAR({{ length }}) ){% endif -%}
+      {%  endfor %}
+  {%- endmacro -%}
+
+
+  {%- macro row_number(order_by, partition_by=[], order='') -%}
+  {#--USAGE:{{ROW_NUMBER(['"CUSTOMER.C_NAME"'],['"CUSTOMER.C_CUSTKEY"'])}}#}
+      ROW_NUMBER() OVER (
+        {%- for p_col in partition_by %}
+            {%- if loop.first %} PARTITION BY {% endif %}
+                {{-p_col-}}
+            {%- if not loop.last %}, {% endif -%}
+        {%- endfor -%}
+
+        {%- for o_col in order_by -%}
+            {%- if loop.first %} ORDER BY {% endif -%}
+                {{-o_col-}}
+            {%- if not loop.last %}, {% endif -%}
+        {%- endfor -%}
+
+        {% if order != '' %} {{order}}{%- endif %} )
+
+  {%- endmacro -%}
+
+  {%- macro even_odd(column='') -%}
+      CASE WHEN MOD({{ column }}, 2) = 0 THEN 'EVEN' ELSE 'ODD' END
+  {%- endmacro %}
+
+
+  {%- macro insert_cte()-%}
+   {#--USAGE:{{insert_cte()}}#}
+   {#--NOTES:Builds a basic INSERT statement for a WORK table#} 
+    {% for source in sources %}
+      {{ stage('Insert CTE ' + source.name | string ) }}
+      INSERT INTO {{ ref_no_link(node.location.name, node.name) -}}
+      WITH MY_CTE ({% for col in source.columns %}
+                        "{{ col.name }}"
+                          {%- if not loop.last -%}, {% endif %}
+                   {% endfor %}                  
+          )    
+          AS
+          (	               
+              SELECT {%- if config.includeDistinct %} DISTINCT {%endif%}
+              {% for col in source.columns %}
+                        {{ get_source_transform(col) }} AS "{{ col.name }}"
+                {%- if not loop.last -%}, {% endif %}
+              {% endfor %}
+
+              {{ source.join }}
+                      
+          )   
+            SELECT * FROM MY_CTE
+    {%-endfor-%}
+  {%- endmacro -%}
+
+  {%-macro node_test_after()-%}
+   {#--USAGE:{{node_test_after()}}#}
+   {#--NOTES:Adds the code for testing AFTER the main INSERT statement#}
+      {% for test in node.tests if config.testsEnabled %}
+          {% if test.runOrder == 'After' %}
+              {{ test_stage(test.name, test.continueOnFailure) }}
+              {{ test.templateString }}
+          {% endif %}
+      {% endfor %}
+  {%- endmacro -%}
+
+  {%-macro node_test_before()-%}
+   {#--USAGE:{{node_test_before()}}#}
+   {#--NOTES:Adds the code for testing BEFORE the main INSERT statement#}
+      {% for test in node.tests if config.testsEnabled %}
+          {% if test.runOrder == 'Before' %}
+              {{ test_stage(test.name, test.continueOnFailure) }}
+              {{ test.templateString }}
+          {% endif %}
+      {% endfor %}
+  {%- endmacro -%}
+
+  {%-macro truncate_before()-%}
+   {#--USAGE:{{truncate_before()}}#}
+   {#--NOTES:Adds the code for truncating the tables#}
+    {% if config.truncateBefore %}
+          {{ stage('Truncate Stage Table') }}
+          TRUNCATE IF EXISTS {{ ref_no_link(node.location.name, node.name) }}	
+    {% endif %}
+  {%- endmacro -%}
+
+  {%-macro pre_SQL()-%}
+   {#--USAGE:{{pre_SQL()}}#}
+   {#--NOTES:Adds the Pre-SQL code#}
+    {% if node.materializationType == 'table' %}
+      {% if config.preSQL %}
+        {{ stage('Pre-SQL') }}
+        {{ config.preSQL }}
+      {% endif %}
+    {% endif %}
+  {%- endmacro -%}
+
+  {%-macro post_SQL()-%}
+   {#--USAGE:{{post_SQL()}}#}
+   {#--NOTES:Adds the Post-SQL code#}
+    {% if config.postSQL %}
+        {{ stage('Post-SQL') }}
+        {{ config.postSQL }}
+    {% endif %}
+  {%- endmacro -%}
+
+  {%-macro column_test_after()-%}
+   {#--USAGE:{{column_test_after()}}#}
+   {#--NOTES:Adds the column testing code#}
+    {% for column in columns %}
+  		{% for test in column.tests %}
+  			{{ test_stage(column.name + ": " + test.name) }}
+  			{{ test.templateString }}
+  		{% endfor %}
+  	{% endfor %}
+  {%- endmacro -%}
+
+  {%-macro stdColNames(colname) %}
+  {#--USAGE:{{stdColNames(column.name)}}#}
+  {#--NOTES:Used when multi selecting colums and needing to bulk change naming conventions.#}
+    {% set mydict = 
+      {'N_': 'NATION_',
+      'R_': 'REGION_',
+      'C_': 'CUSTOMER_',
+      'P_': 'PART_',
+      'L_': 'LINEITEM_',
+      'PS_': 'PARTSUPP_',
+      'S_': 'SUPPLIER_',
+      'O_': 'ORDER_'
+      }         
+    %}
+
+    {% set col = namespace(newname = colname) %}
+    {% for k, v in mydict.items() %}
+        {%set col.newname = col.newname | upper | replace(k | upper,v | upper) %}
+    {% endfor %}
+
+  {{- col.newname -}}
+
+  {%- endmacro -%}
+
+  {%-macro maskingLookup(colname) %}
+  {#--USAGE:{{maskingLookup(colname)}}#}
+  {#--NOTES:Used to apply Dynamic Masking to columns based on pattern matching the follow list#}
+  {% set maskList =
+        ['PHONE',
+        'ADDRESS',
+        'NAME']
+  %}
+  {% set col = namespace(match = 'no') %}
+  {% for mask in maskList%}  
+      {% if mask in colname%} {% set col.match = 'yes'%} {%endif%}
+  {% endfor%}
+  {{-col.match | trim-}}
+  {%- endmacro -%}
+
+
+  {%- macro ref_raw(location_name, node_name) -%}
+      {% raw %}{{ ref('{% endraw %}{{ location_name }}{% raw %}', '{% endraw %}{{ node_name }}{% raw %}') }}{% endraw %}
+  {%- endmacro -%}
+
+  {%- macro ref_no_link_raw(location_name, node_name) -%}
+      {% raw %}{{ ref_no_link('{% endraw %}{{ location_name }}{% raw %}', '{% endraw %}{{ node_name }}{% raw %}') }}{% endraw %}
+  {%- endmacro -%}
+
+  {%- macro ref_link_raw(location_name, node_name) -%}
+      {% raw %}{{ ref_link('{% endraw %}{{ location_name }}{% raw %}', '{% endraw %}{{ node_name }}{% raw %}') }}{% endraw %}
+  {%- endmacro -%}
+
+  {%-macro joinStd() -%}
+  {#--USAGE:{{joinStd()}}#}
+  {#--NOTES:Used to add a standard join to any nodes#}
+  {%- for dep in sources[0].dependencies -%}
+      {%- if loop.first %} FROM {% endif -%}
+      {% if not loop.first %} {%- if config.joinType|length < 1-%} LEFT {%- else %} {{-config.joinType}} {%- endif %} JOIN {% endif -%}
+      {{- ref_raw(dep.node.location.name, dep.node.name) }} "{{ dep.node.name }}"
+      {%- if not loop.first %} 
+      ON "{{ sources[0].dependencies[loop.index0].node.name }}"./*COLUMN*/ = "{{ sources[0].dependencies[loop.index0 - 1].node.name }}"./*COLUMN*/ {%- endif %}
+  {% endfor -%}
+  WHERE 1=1
+  {%- endmacro -%}
+
+  {%-macro joinCDC() -%}
+  {#--USAGE:{{joinCDC()}}#}
+  {#--NOTES:Used to add a CDC from Stream #}
+  {%- for dep in sources[0].dependencies -%}
+      {%- if loop.first %} FROM {% endif -%}
+    {{- ref_link_raw(dep.node.location.name, dep.node.name) }} 
+  {% set src = storageLocations | selectattr('name', "equalto", sources[0].dependencies[0].node.location.name) | list | first %} "{{src.database}}"."{{node.location.name}}"."{{sources[0].dependencies[0].node.name}}_STREAM" "{{ dep.node.name }}"
+  {% endfor -%}
+  WHERE METADATA$ACTION = 'INSERT'
+  {%- endmacro -%}
+
+  {%-macro joinCDC2() -%}
+  {#--USAGE:{{joinCDC2()}}#}
+  {#--NOTES:Used to add a CDC from Stream #}
+  FROM {{- ref_link_raw(sources[0].dependencies[0].node.location.name, sources[0].dependencies[0].node.name) }} 
+  {% set src = storageLocations | selectattr('name', "equalto", sources[0].dependencies[0].node.location.name) | list | first %} "{{src.database}}"."{{node.location.name}}"."{{sources[0].dependencies[0].node.name}}_STREAM" "{{ sources[0].dependencies[0].node.name }}"
+  WHERE METADATA$ACTION = 'INSERT'
+  {%- endmacro -%}
+
+  {%-macro joinIncFivetran_old() -%}
+  {#--USAGE:{{joinIncFivetran()}}#}
+  {#--NOTES:Used to add an incremental load filter to an INC node type (Fivetran)#}
+  {% if config.refTable and persist | length > 0  %}
+      {% if "WHERE" in source.join | upper %}
+          AND
+      {% else %}
+          WHERE 
+      {% endif %}
+      _FIVETRAN_SYNCED > (SELECT NVL(MAX(_FIVETRAN_SYNCED), '1900-01-01') 
+                          FROM {{ref_raw(config.persistTableLocation, persist)}} )
+  {% endif %}
+  {%- endmacro -%}
+
+  {%-macro joinIncFivetran() -%}
+  {#--USAGE:{{joinIncFivetran()}}#}
+  {#--NOTES:Used to add an incremental load filter to an INC node type (Fivetran)#}
+  {#--Assumption is that there won't be a join or multi-source#}
+  {#--and that the user will modify the WHERE clause after it has been created#}
+  {%- set src = namespace() -%}
+  {%- for dep in sources[0].dependencies -%}
+      FROM
+      {{- ref_raw(dep.node.location.name, dep.node.name) }} "{{ dep.node.name }}"
+      {%- set src.name = dep.node.name -%}
+  {%- endfor -%}
+  {%- if config.persistTableName | length > 0 -%}
+      {%- set persist = config.persistTableName -%}
+  {%- else -%}
+      {%- set persist = node.name | replace("INC", config.persistTable) -%}
+  {%- endif -%}
+  {%- if config.refTable and persist | length > 0 -%}
+  WHERE "{{src.name}}"."{{config.incColumn}}" > 
+    (SELECT COALESCE(MAX("{{config.incColumn}}"), '1900-01-01') 
+              FROM {{ref_raw(config.persistTableLocation, persist)}} )
+  {%endif%}
+  {%- endmacro -%}
+name: macro
+type: Macro

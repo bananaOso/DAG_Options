@@ -1,0 +1,228 @@
+fileVersion: 1
+id: 28203875-a754-4ecc-a936-66e554b76348
+name: STG_DIM_CUSTOMER_10
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Customer data as defined by TPC-H
+  isMultisource: false
+  locationName: WORK
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: cca15e42-4ccf-4c34-9877-b9d59529cd40
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: NUMBER(38,0)
+        description: ""
+        name: CUSTOMER_CUSTKEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: a822dfd1-aed2-4811-aedd-f3cc2faf12ec
+                stepCounter: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 98786825-63f1-4b89-9fe9-9db5489640c3
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: VARCHAR(25)
+        description: ""
+        name: CUSTOMER_NAME
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 5025f719-d12d-4279-b4e5-7b592a222fd3
+                stepCounter: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: f4c9a7ed-31c7-4c59-be5f-090c169c9bd6
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: VARCHAR(40)
+        description: ""
+        name: CUSTOMER_ADDRESS
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: ee2b073b-a83d-476a-a090-d18153857fa2
+                stepCounter: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 7be8ba94-abd4-42e2-a619-4f829cef7c5c
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: VARCHAR(25)
+        description: NATION Name
+        name: CUSTOMER_NATION_NAME
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 04167a66-5e96-4aa5-920f-311c01dd1efc
+                stepCounter: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: bf128d7d-019c-4acd-ada0-e857a46df42d
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: VARCHAR(25)
+        description: ""
+        name: CUSTOMER_REGION_NAME
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 70308734-e270-4a82-aba8-8afd842da039
+                stepCounter: 08af41a9-72d4-4f13-b731-9f1a4dab1021
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: a611c2d8-5c90-4daf-a2e9-069f57b8665a
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: VARCHAR(15)
+        description: ""
+        name: CUSTOMER_PHONE
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: e119e322-28de-4eb0-9734-784dbde9faea
+                stepCounter: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 49e694b1-0b90-402b-ad76-39e1fb6358e0
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: NUMBER(12,2)
+        description: ""
+        name: CUSTOMER_ACCTBAL
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 9054788b-404f-4b9f-ac76-74acc2983a9d
+                stepCounter: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 2a9310cc-434e-494b-9626-4843d571be1e
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: VARCHAR(10)
+        description: Determins if the Customer has a positive or negative balance
+        name: CUSTOMER_STATUS
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 9054788b-404f-4b9f-ac76-74acc2983a9d
+                stepCounter: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+            transform: CASE WHEN "PSTG_CUSTOMER"."CUSTOMER_ACCTBAL" < 0 THEN 'DEBIT' ELSE 'CREDIT' END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: edfe35bd-da02-4ccc-b08f-ddba96935565
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: VARCHAR(10)
+        description: ""
+        name: CUSTOMER_MKTSEGMENT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: f9918438-1dae-4087-9444-7ff5d18e7cf7
+                stepCounter: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 08878b51-3298-42f5-bd48-2bbd20c7de84
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: VARCHAR(117)
+        description: ""
+        name: CUSTOMER_COMMENT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 8a44fb3d-9d70-43dd-9b3b-82d020083d4b
+                stepCounter: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+            transform: UPPER("PSTG_CUSTOMER"."CUSTOMER_COMMENT")
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 84ad851a-c0e5-454d-b3a8-5e28212a8d33
+          stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        config: {}
+        dataType: STRING
+        defaultValue: ""
+        description: Change Hash based on all non BK columns required for Type II tracking
+        hashDetails:
+          hashAlgorithm: SHA1
+        hashedColumns:
+          - columnCounter: 98786825-63f1-4b89-9fe9-9db5489640c3
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+          - columnCounter: f4c9a7ed-31c7-4c59-be5f-090c169c9bd6
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+          - columnCounter: 7be8ba94-abd4-42e2-a619-4f829cef7c5c
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+          - columnCounter: bf128d7d-019c-4acd-ada0-e857a46df42d
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+          - columnCounter: a611c2d8-5c90-4daf-a2e9-069f57b8665a
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+          - columnCounter: 49e694b1-0b90-402b-ad76-39e1fb6358e0
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+          - columnCounter: 2a9310cc-434e-494b-9626-4843d571be1e
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+          - columnCounter: edfe35bd-da02-4ccc-b08f-ddba96935565
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+          - columnCounter: 08878b51-3298-42f5-bd48-2bbd20c7de84
+            stepCounter: 28203875-a754-4ecc-a936-66e554b76348
+        name: CHANGE_HASH
+        nullable: true
+        sourceColumnReferences: []
+    cteString: ""
+    enabledColumnTestIDs: []
+    sourceMapping:
+      - aliases:
+          PSTG_CUSTOMER: 05a70a73-52ed-4c3e-992a-e3135f6a8308
+          PSTG_NATION: 8cdd55b1-de6e-4c4a-8cef-8e5405a930e8
+          PSTG_REGION: 08af41a9-72d4-4f13-b731-9f1a4dab1021
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: ODS
+            nodeName: PSTG_CUSTOMER
+          - locationName: ODS
+            nodeName: PSTG_NATION
+          - locationName: ODS
+            nodeName: PSTG_REGION
+        join:
+          joinCondition: |-
+
+            FROM {{ ref('ODS', 'PSTG_CUSTOMER') }} "PSTG_CUSTOMER"
+            LEFT JOIN {{ ref('ODS', 'PSTG_NATION') }} "PSTG_NATION"
+            ON "PSTG_CUSTOMER"."CUSTOMER_NATIONKEY" = "PSTG_NATION"."NATION_NATIONKEY"
+            LEFT JOIN {{ ref('ODS', 'PSTG_REGION') }} "PSTG_REGION"
+            ON "PSTG_NATION"."NATION_REGIONKEY" = "PSTG_REGION"."REGION_REGIONKEY"
+            WHERE "PSTG_NATION"."SYSTEM_CURRENT_FLAG" = 'Y'
+            AND "PSTG_REGION"."SYSTEM_CURRENT_FLAG" = 'Y'
+        name: STG_DIM_CUSTOMER_10
+        noLinkRefs: []
+  name: STG_DIM_CUSTOMER_10
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+type: Node

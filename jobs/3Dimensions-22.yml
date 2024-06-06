@@ -1,0 +1,6 @@
+excludeSelector: "{nodeType: View} OR { location: MART name: DIM_DATE }"
+fileVersion: 1
+id: "22"
+includeSelector: "{ location: MART name: DIM_* }"
+name: "# 3 Dimensions"
+type: Job

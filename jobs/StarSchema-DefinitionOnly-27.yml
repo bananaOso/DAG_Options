@@ -1,0 +1,6 @@
+excludeSelector: "{ location: WORK name: * } OR { location: MART name: DIM_DATE } OR { location: MART name: FCT_* } OR { location: ODS name: PSTG_*} OR { location: SOURCE_TPCH_SF1 name: * }"
+fileVersion: 1
+id: "27"
+includeSelector: "+{ location: MART name: F_*_V }"
+name: Star Schema - Definition Only
+type: Job

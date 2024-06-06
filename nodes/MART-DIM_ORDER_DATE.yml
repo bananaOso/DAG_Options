@@ -1,0 +1,164 @@
+fileVersion: 1
+id: "440"
+name: DIM_ORDER_DATE
+operation:
+  config:
+    insertStrategy: UNION
+    selectDistinct: false
+  database: ""
+  deployEnabled: true
+  description: ""
+  isMultisource: false
+  locationName: MART
+  materializationType: view
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5168"
+          stepCounter: "440"
+        config: {}
+        dataType: DATE
+        description: ""
+        hashColumns: []
+        hashDetails: null
+        name: DIM_ORDER_DATE_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: "5160"
+                stepCounter: "439"
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5169"
+          stepCounter: "440"
+        config: {}
+        dataType: SMALLINT
+        description: ""
+        hashColumns: []
+        hashDetails: null
+        name: YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: "5161"
+                stepCounter: "439"
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5170"
+          stepCounter: "440"
+        config: {}
+        dataType: SMALLINT
+        description: ""
+        hashColumns: []
+        hashDetails: null
+        name: MONTH
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: "5162"
+                stepCounter: "439"
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5171"
+          stepCounter: "440"
+        config: {}
+        dataType: CHAR(3)
+        description: ""
+        hashColumns: []
+        hashDetails: null
+        name: MONTH_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: "5163"
+                stepCounter: "439"
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5172"
+          stepCounter: "440"
+        config: {}
+        dataType: SMALLINT
+        description: ""
+        hashColumns: []
+        hashDetails: null
+        name: DAY_OF_MONTH
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: "5164"
+                stepCounter: "439"
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5173"
+          stepCounter: "440"
+        config: {}
+        dataType: VARCHAR(9)
+        description: ""
+        hashColumns: []
+        hashDetails: null
+        name: DAY_OF_WEEK
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: "5165"
+                stepCounter: "439"
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5174"
+          stepCounter: "440"
+        config: {}
+        dataType: SMALLINT
+        description: ""
+        hashColumns: []
+        hashDetails: null
+        name: WEEK_OF_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: "5166"
+                stepCounter: "439"
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5175"
+          stepCounter: "440"
+        config: {}
+        dataType: SMALLINT
+        description: ""
+        hashColumns: []
+        hashDetails: null
+        name: DAY_OF_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: "5167"
+                stepCounter: "439"
+            transform: ""
+    cteString: ""
+    enabledColumnTestIDs: []
+    sourceMapping:
+      - aliases:
+          DIM_DATE: "439"
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: MART
+            nodeName: DIM_DATE
+        join:
+          joinCondition: FROM {{ ref('MART', 'DIM_DATE') }} "DIM_DATE"
+        name: DIM_ORDER_DATE
+        noLinkRefs: []
+  name: DIM_ORDER_DATE
+  overrideSQL: false
+  schema: ""
+  sqlType: View
+  type: sql
+type: Node

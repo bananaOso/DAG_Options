@@ -1,0 +1,616 @@
+fileVersion: 1
+id: 630d56a4-d597-4737-8508-e7f3efd65405
+name: V_ORDERS_LINEITEM_CUSTOM
+operation:
+  config:
+    insertStrategy: UNION
+    selectDistinct: false
+  database: ""
+  deployEnabled: true
+  description: ""
+  isMultisource: false
+  locationName: WORK
+  materializationType: view
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 4ff04aee-00db-407f-9542-c28e91146107
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_ORDERKEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: d1e54363-6a4b-459a-b757-0739d336a6d3
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_PARTKEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: b81720a9-a9d6-4b44-a728-9251d26b0abe
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_SUPPKEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 64b2e117-004d-455f-ba03-9a2d4ad90f0f
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: ORDER_ORDERKEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: da786d91-305a-434e-acd5-ff8ee053d4f1
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_LINENUMBER
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: b1f60ec9-0d0f-4b77-9239-f6add79c9ba5
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: ORDER_CUSTKEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 95cc4f44-af92-480d-aeb6-1c70bb0e7d23
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(12,2)
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_QUANTITY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 0d16a6ae-85a7-4069-a4e8-5352eea19f67
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(12,2)
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_DISCOUNT
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 56089191-403d-45c4-b507-188e8cac4d65
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(12,2)
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_TAX
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: bce0c21e-3307-4b19-bcf8-c2eaed6b2b6b
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: DATE
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_SHIPDATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: f9e9c8b1-3585-4685-831c-ab00959f8429
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: DATE
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_COMMITDATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 4e50bec6-fd50-4576-a930-e0ad3d783d06
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: DATE
+        defaultValue: ""
+        description: ""
+        name: LINEITEM_RECEIPTDATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 09e76e38-4baa-49fd-8c23-7ebad5b651b3
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: DATE
+        defaultValue: ""
+        description: ""
+        name: ORDER_ORDERDATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 96a31e96-9b0d-4295-b939-2ffc0cc57407
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: DIM_CUSTOMER_KEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 8132c364-6f6e-4411-8bf6-87f8c3461055
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: DIM_ORDER_KEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 741fef49-d24e-4ba6-9c49-5da5cde31915
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: DATE
+        defaultValue: ""
+        description: ""
+        name: DIM_SUPPLIER_KEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: fd9f6445-01c5-40d9-8355-9d9eb10c3956
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: DATE
+        defaultValue: ""
+        description: ""
+        name: DIM_ORDER_DATE_KEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: fdbf12e6-1c45-442e-ad70-bb5a5f6fa483
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(1,0)
+        defaultValue: ""
+        description: ""
+        name: DIM_SHIP_DATE_KEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 5971c00a-476b-4df2-b8f8-df9b0d290547
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(38,0)
+        defaultValue: ""
+        description: ""
+        name: CALC_ORDER_COUNT
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: b922cc21-5e29-44e1-8eff-d963bdd1b752
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(12,2)
+        defaultValue: ""
+        description: ""
+        name: CALC_ORDER_TOTAL_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 8d15a38e-742d-4bc8-909f-5a808a22d46a
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(1,0)
+        defaultValue: ""
+        description: ""
+        name: CALC_COUNT
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: b2ea92b8-fcb3-4062-8096-6faf6218e224
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(9,0)
+        defaultValue: ""
+        description: ""
+        name: CALC_DAYS_TO_SHIP
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: e4ac76bb-577e-46e1-a69a-288650034ef0
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(1,0)
+        defaultValue: ""
+        description: ""
+        name: CALC_DAYS_TO_SHIP_LOW
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: de7e11c1-73d5-4af8-9fc1-61473e35c58b
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(1,0)
+        defaultValue: ""
+        description: ""
+        name: CALC_DAYS_TO_SHIP_MEDIUM
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: 4a95875e-5058-4141-a3ac-85014f897887
+          stepCounter: 630d56a4-d597-4737-8508-e7f3efd65405
+        config: {}
+        dataType: NUMBER(1,0)
+        defaultValue: ""
+        description: ""
+        name: CALC_DAYS_TO_SHIP_HIGH
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+        transform: ""
+    cteString: ""
+    enabledColumnTestIDs: []
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: |
+            
+            CREATE OR REPLACE VIEW "GLEN_DEMO_DEV"."WORK"."V_ORDERS_LINEITEM_CUSTOM_CTE" AS
+            WITH
+            
+            ORDERS_VALIDATION
+                ( 
+              "LINEITEM_ORDERKEY",
+              "LINEITEM_PARTKEY",
+              "LINEITEM_SUPPKEY",
+              "ORDER_ORDERKEY",
+              "LINEITEM_LINENUMBER",
+              "ORDER_CUSTKEY",
+              "LINEITEM_QUANTITY",
+              "LINEITEM_DISCOUNT",
+              "LINEITEM_TAX",
+              "LINEITEM_SHIPDATE",
+              "LINEITEM_COMMITDATE",
+              "LINEITEM_RECEIPTDATE",
+              "ORDER_ORDERDATE",
+              "ORDER_TOTALPRICE"
+              )
+            
+              AS 
+                (
+            
+                    SELECT
+                          "LINEITEM"."L_ORDERKEY" AS "LINEITEM_ORDERKEY",
+                          "LINEITEM"."L_PARTKEY" AS "LINEITEM_PARTKEY",
+                          "LINEITEM"."L_SUPPKEY" AS "LINEITEM_SUPPKEY",
+                          "ORDERS"."O_ORDERKEY" AS "ORDER_ORDERKEY",
+                          "LINEITEM"."L_LINENUMBER" AS "LINEITEM_LINENUMBER",
+                          "ORDERS"."O_CUSTKEY" AS "ORDER_CUSTKEY",
+                          "LINEITEM"."L_QUANTITY" AS "LINEITEM_QUANTITY",
+                          "LINEITEM"."L_DISCOUNT" AS "LINEITEM_DISCOUNT",
+                          "LINEITEM"."L_TAX" AS "LINEITEM_TAX",
+                          TRY_CAST("LINEITEM"."L_SHIPDATE" AS DATE) AS "LINEITEM_SHIPDATE" ,
+                          TRY_CAST("LINEITEM"."L_COMMITDATE" AS DATE) AS "LINEITEM_COMMITDATE",
+                          TRY_CAST("LINEITEM"."L_RECEIPTDATE" AS DATE) AS "LINEITEM_RECEIPTDATE",
+                          TRY_CAST("ORDERS"."O_ORDERDATE" AS DATE) AS "ORDER_ORDERDATE",
+                          "ORDERS"."O_TOTALPRICE" AS "ORDER_TOTALPRICE"
+             FROM
+              "SNOWFLAKE_SAMPLE_DATA"."TPCH_SF1"."LINEITEM" "LINEITEM"
+              LEFT JOIN "SNOWFLAKE_SAMPLE_DATA"."TPCH_SF1"."ORDERS" "ORDERS" ON "LINEITEM"."L_ORDERKEY" = "ORDERS"."O_ORDERKEY"
+              WHERE "ORDERS"."O_ORDERDATE" BETWEEN '1900-01-01 00:00:01' AND current_timestamp()
+              ),
+            
+            ORDERS
+                ( 
+              "LINEITEM_ORDERKEY",
+              "LINEITEM_PARTKEY",
+              "LINEITEM_SUPPKEY",
+              "ORDER_ORDERKEY",
+              "LINEITEM_LINENUMBER",
+              "ORDER_CUSTKEY",
+              "LINEITEM_QUANTITY",
+              "LINEITEM_DISCOUNT",
+              "LINEITEM_TAX",
+              "LINEITEM_SHIPDATE",
+              "LINEITEM_COMMITDATE",
+              "LINEITEM_RECEIPTDATE",
+              "ORDER_ORDERDATE",
+              "CALC_ORDER_COUNT",
+              "DIM_CUSTOMER_KEY", 
+              "DIM_ORDER_KEY", 
+              "DIM_SUPPLIER_KEY", 
+              "DIM_ORDER_DATE_KEY",
+              "DIM_SHIP_DATE_KEY",
+              "CALC_ORDER_TOTAL_PRICE",
+              "CALC_COUNT",
+              "CALC_DAYS_TO_SHIP"
+               )
+            
+              AS 
+                (
+            
+                    SELECT
+                          "ORDERS_VALIDATION"."LINEITEM_ORDERKEY",
+                          "ORDERS_VALIDATION"."LINEITEM_PARTKEY",
+                          "ORDERS_VALIDATION"."LINEITEM_SUPPKEY",
+                          "ORDERS_VALIDATION"."ORDER_ORDERKEY",
+                          "ORDERS_VALIDATION"."LINEITEM_LINENUMBER",
+                          "ORDERS_VALIDATION"."ORDER_CUSTKEY",
+                          "ORDERS_VALIDATION"."LINEITEM_QUANTITY",
+                          "ORDERS_VALIDATION"."LINEITEM_DISCOUNT",
+                          "ORDERS_VALIDATION"."LINEITEM_TAX",
+                          "ORDERS_VALIDATION"."LINEITEM_SHIPDATE",
+                          "ORDERS_VALIDATION"."LINEITEM_COMMITDATE",
+                          "ORDERS_VALIDATION"."LINEITEM_RECEIPTDATE",
+                          "ORDERS_VALIDATION"."ORDER_ORDERDATE",
+                          COALESCE("DIM_CUSTOMER"."DIM_CUSTOMER_KEY",0), 
+            			  COALESCE("DIM_ORDER"."DIM_ORDER_KEY",0),
+            			  COALESCE("DIM_SUPPLIER"."DIM_SUPPLIER_KEY",0), 
+            			  COALESCE("DIM_ORDER_DATE"."DIM_ORDER_DATE_KEY",'1900-01-01'), 
+            			  COALESCE("DIM_SHIP_DATE"."DIM_SHIP_DATE_KEY",'1900-01-01'), 
+              CASE
+                WHEN "ORDERS_VALIDATION"."LINEITEM_LINENUMBER" = 1 THEN 1
+                ELSE 0
+              END AS "CALC_ORDER_COUNT",
+              CASE
+                WHEN "ORDERS_VALIDATION"."LINEITEM_LINENUMBER" = 1 THEN "ORDERS_VALIDATION"."ORDER_TOTALPRICE"
+                ELSE 0
+              END AS "CALC_ORDER_TOTAL_PRICE",
+              1 AS "CALC_COUNT",
+              "ORDERS_VALIDATION"."LINEITEM_SHIPDATE" - "ORDERS_VALIDATION"."ORDER_ORDERDATE" AS "CALC_DAYS_TO_SHIP"
+            FROM
+              "ORDERS_VALIDATION" "ORDERS_VALIDATION"
+            LEFT JOIN "GLEN_DEMO_DEV"."MART"."DIM_ORDER" "DIM_ORDER"
+            ON "ORDERS_VALIDATION"."ORDER_ORDERKEY" = "DIM_ORDER"."ORDER_ORDERKEY"
+            LEFT JOIN "GLEN_DEMO_DEV"."MART"."DIM_CUSTOMER" "DIM_CUSTOMER"
+            ON "ORDERS_VALIDATION"."ORDER_CUSTKEY" = "DIM_CUSTOMER"."CUSTOMER_CUSTKEY"
+            LEFT JOIN "GLEN_DEMO_DEV"."MART"."DIM_SUPPLIER" "DIM_SUPPLIER"
+            ON "ORDERS_VALIDATION"."LINEITEM_SUPPKEY" = "DIM_SUPPLIER"."SUPPLIER_SUPPKEY"
+            LEFT JOIN "GLEN_DEMO_DEV"."MART"."DIM_ORDER_DATE" "DIM_ORDER_DATE"
+            ON "ORDERS_VALIDATION"."ORDER_ORDERDATE" = "DIM_ORDER_DATE"."DIM_ORDER_DATE_KEY"
+            LEFT JOIN "GLEN_DEMO_DEV"."MART"."DIM_SHIP_DATE" "DIM_SHIP_DATE"
+            ON "ORDERS_VALIDATION"."LINEITEM_SHIPDATE" = "DIM_SHIP_DATE"."DIM_SHIP_DATE_KEY"
+            WHERE 
+            "ORDERS_VALIDATION"."ORDER_ORDERDATE" IS NOT NULL
+            OR
+            "ORDERS_VALIDATION"."LINEITEM_SHIPDATE" IS NOT NULL
+            
+              )
+            
+              SELECT 
+              "ORDERS"."LINEITEM_ORDERKEY",
+              "ORDERS"."LINEITEM_PARTKEY",
+              "ORDERS"."LINEITEM_SUPPKEY",
+              "ORDERS"."ORDER_ORDERKEY",
+              "ORDERS"."LINEITEM_LINENUMBER",
+              "ORDERS"."ORDER_CUSTKEY",
+              "ORDERS"."LINEITEM_QUANTITY",
+              "ORDERS"."LINEITEM_DISCOUNT",
+              "ORDERS"."LINEITEM_TAX",
+              "ORDERS"."LINEITEM_SHIPDATE",
+              "ORDERS"."LINEITEM_COMMITDATE",
+              "ORDERS"."LINEITEM_RECEIPTDATE",
+              "ORDERS"."ORDER_ORDERDATE",
+              "ORDERS"."DIM_CUSTOMER_KEY", 
+              "ORDERS"."DIM_ORDER_KEY", 
+              "ORDERS"."DIM_SUPPLIER_KEY", 
+              "ORDERS"."DIM_ORDER_DATE_KEY",
+              "ORDERS"."DIM_SHIP_DATE_KEY",
+              "ORDERS"."CALC_ORDER_COUNT",
+              "ORDERS"."CALC_ORDER_TOTAL_PRICE",
+              "ORDERS"."CALC_COUNT",
+              "ORDERS"."CALC_DAYS_TO_SHIP",
+             CASE WHEN "ORDERS"."CALC_DAYS_TO_SHIP" BETWEEN 0 AND 50 AND "ORDERS"."CALC_ORDER_TOTAL_PRICE" > 10000 THEN 1 ELSE 0 END AS CALC_DAYS_TO_SHIP_LOW,
+             CASE WHEN "ORDERS"."CALC_DAYS_TO_SHIP" BETWEEN 51 AND 100 AND "ORDERS"."CALC_ORDER_TOTAL_PRICE" > 10000 THEN 1 ELSE 0 END AS CALC_DAYS_TO_SHIP_MEDIUM,
+             CASE WHEN "ORDERS"."CALC_DAYS_TO_SHIP" > 100 AND "ORDERS"."CALC_ORDER_TOTAL_PRICE" > 10000 THEN 1 ELSE 0 END AS CALC_DAYS_TO_SHIP_HIGH
+             FROM ORDERS;
+        dependencies:
+          - locationName: SOURCE_TPCH_SF1
+            nodeName: LINEITEM
+          - locationName: SOURCE_TPCH_SF1
+            nodeName: ORDERS
+        join:
+          joinCondition: |-
+            FROM {{ ref('SOURCE_TPCH_SF1', 'ORDERS') }} "ORDERS"
+            INNER JOIN {{ ref('SOURCE_TPCH_SF1', 'LINEITEM') }} "LINEITEM"
+            ON "ORDERS"./*COLUMN*/ = "LINEITEM"./*COLUMN*/
+        name: V_ORDERS_LINEITEM_CUSTOM
+        noLinkRefs: []
+  name: V_ORDERS_LINEITEM_CUSTOM
+  overrideSQL: true
+  schema: ""
+  sqlType: View
+  type: sql
+  version: 1
+type: Node

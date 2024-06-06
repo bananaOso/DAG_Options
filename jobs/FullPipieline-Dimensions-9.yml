@@ -1,0 +1,6 @@
+excludeSelector: "{name: *DATE*}"
+fileVersion: 1
+id: "9"
+includeSelector: "+{ name: DIM*} "
+name: Full Pipieline - Dimensions
+type: Job

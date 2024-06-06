@@ -1,0 +1,83 @@
+fileVersion: 1
+id: 00c17881-6bf9-4de4-a93c-6f302d8da4af
+name: V_NATION
+operation:
+  config:
+    insertStrategy: UNION
+    selectDistinct: false
+  database: ""
+  deployEnabled: true
+  description: Nation data as defined by TPC-H
+  isMultisource: false
+  locationName: WORK
+  materializationType: view
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 3edce07f-b2bc-42a4-bd86-75ff43bd6c2d
+          stepCounter: 00c17881-6bf9-4de4-a93c-6f302d8da4af
+        config: {}
+        dataType: NUMBER(38,0)
+        description: BK Nation Key
+        hashColumns: []
+        hashDetails: null
+        name: NATION_NATIONKEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: f027a7bc-5b13-4788-a3c9-2aa3c792583c
+                stepCounter: 42eadae4-ccb3-495c-ba1e-4340f9728061
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 8d652da4-7f91-434d-9afb-24c26e438ae0
+          stepCounter: 00c17881-6bf9-4de4-a93c-6f302d8da4af
+        config: {}
+        dataType: VARCHAR(25)
+        description: NATION Name
+        hashColumns: []
+        hashDetails: null
+        name: NATION_NAME
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 942b3e4a-dd95-4f4a-a6f6-891912c05320
+                stepCounter: 42eadae4-ccb3-495c-ba1e-4340f9728061
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: dc7a2962-a1e4-4bfc-9051-899bcfa1c2ae
+          stepCounter: 00c17881-6bf9-4de4-a93c-6f302d8da4af
+        config: {}
+        dataType: NUMBER(38,0)
+        description: FK Region Key
+        hashColumns: []
+        hashDetails: null
+        name: NATION_REGIONKEY
+        nullable: false
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 43458b9c-c8cd-41d9-8aee-9a510fa73e79
+                stepCounter: 42eadae4-ccb3-495c-ba1e-4340f9728061
+            transform: ""
+    cteString: ""
+    enabledColumnTestIDs: []
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SOURCE_TPCH_SF1
+            nodeName: NATION
+        join:
+          joinCondition: FROM {{ ref('SOURCE_TPCH_SF1', 'NATION') }} "NATION"
+        name: V_NATION
+        noLinkRefs: []
+  name: V_NATION
+  overrideSQL: false
+  schema: ""
+  sqlType: View
+  type: sql
+type: Node

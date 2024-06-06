@@ -1,0 +1,6 @@
+excludeSelector: ""
+fileVersion: 1
+id: "20"
+includeSelector: "{ location: WORK name: STG_FCT_* }"
+name: "# 4 Stage Fact"
+type: Job

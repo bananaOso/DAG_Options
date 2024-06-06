@@ -1,0 +1,6 @@
+excludeSelector: ""
+fileVersion: 1
+id: "17"
+includeSelector: "+{ location: MART name: FCT_*}"
+name: Full Pipeline - Facts
+type: Job

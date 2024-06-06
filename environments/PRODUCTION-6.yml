@@ -1,0 +1,23 @@
+fileVersion: 1
+id: "6"
+mappingDefinitions:
+  CUSTOM_SOURCE:
+    database: GLEN_DEMO_PROD
+    schema: SOURCE
+  DATA_VAULT:
+    database: GLEN_DEMO_PROD
+    schema: DATA_VAULT
+  MART:
+    database: GLEN_DEMO_PROD
+    schema: MART
+  ODS:
+    database: GLEN_DEMO_PROD
+    schema: ODS
+  SOURCE_TPCH_SF1:
+    database: SNOWFLAKE_SAMPLE_DATA
+    schema: TPCH_SF1
+  WORK:
+    database: GLEN_DEMO_PROD
+    schema: MART
+name: PRODUCTION
+type: Environment

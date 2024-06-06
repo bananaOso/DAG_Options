@@ -1,0 +1,181 @@
+fileVersion: 1
+id: "439"
+name: DIM_DATE
+operation:
+  config:
+    dateColumnName: "\"DATE_COL\""
+    daysToGenerate: "15000"
+    postSQL: ""
+    preSQL: ""
+    startingDate: DATEADD(DAY, -15000, CURRENT_DATE)
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: ""
+  isMultisource: false
+  locationName: MART
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5160"
+          stepCounter: "439"
+        config: {}
+        dataType: DATE
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isDate: true
+        name: DATE_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: "{{ config.dateColumnName }}"
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5161"
+          stepCounter: "439"
+        config: {}
+        dataType: SMALLINT
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isYear: true
+        name: YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: YEAR({{ config.dateColumnName }})
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5162"
+          stepCounter: "439"
+        config: {}
+        dataType: SMALLINT
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isMonth: true
+        name: MONTH
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MONTH({{ config.dateColumnName }})
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5163"
+          stepCounter: "439"
+        config: {}
+        dataType: CHAR(3)
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isMonthName: true
+        name: MONTH_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MONTHNAME({{ config.dateColumnName }})
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5164"
+          stepCounter: "439"
+        config: {}
+        dataType: SMALLINT
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isDayOfMonth: true
+        name: DAY_OF_MONTH
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: DAY({{ config.dateColumnName }})
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5165"
+          stepCounter: "439"
+        config: {}
+        dataType: VARCHAR(9)
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isDayOfWeek: true
+        name: DAY_OF_WEEK
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: DAYOFWEEK({{ config.dateColumnName }})
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5166"
+          stepCounter: "439"
+        config: {}
+        dataType: SMALLINT
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isWeekOfYear: true
+        name: WEEK_OF_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: WEEKOFYEAR({{ config.dateColumnName }})
+      - acceptedValues:
+          strictMatch: true
+          values: []
+        appliedColumnTests: {}
+        columnReference:
+          columnCounter: "5167"
+          stepCounter: "439"
+        config: {}
+        dataType: SMALLINT
+        defaultValue: ""
+        description: ""
+        hashColumns: []
+        isYearColumn: true
+        name: DAY_OF_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: DAYOFYEAR({{ config.dateColumnName }})
+    cteString: ""
+    enabledColumnTestIDs: []
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies: []
+        join:
+          joinCondition: ""
+        name: DIM_DATE
+        noLinkRefs: []
+  name: DIM_DATE
+  overrideSQL: false
+  schema: ""
+  sqlType: "26"
+  type: sql
+type: Node
